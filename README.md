@@ -13,3 +13,9 @@ Install the required Python packages:
 ```
 python -m pip install -r requirements.txt
 ```
+
+## Execution
+Run the simulation by:
+```
+python sim.py
+```
