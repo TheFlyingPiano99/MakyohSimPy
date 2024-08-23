@@ -1,13 +1,12 @@
 import matplotlib.pyplot as plt
-import src.core_sim as core_sim
-import src.mirror as mirror
+from src.mirror import Mirror
 
 
 def main():
     print("Hello Makyoh sim!")
-    resolution = 1000
-    my_mirror = mirror.Mirror()
-    canvas_image = core_sim.render_reflection(resolution, my_mirror)
+    resolution = [1000, 1000]
+    my_mirror = Mirror()
+    canvas_image = my_mirror.render_canvas(resolution)
 
     # show hight map in 2d
     plt.figure()

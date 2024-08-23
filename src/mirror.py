@@ -1,20 +1,21 @@
 import numpy as np
-from numba.experimental import jitclass
-import numba
-
+import cupy as cp
 
 class Mirror:
-    distance: np.float64
+    __resolution: list[int]
+    __distance: float
 
-    def __init__(self):
-        print("Init mirror")
-        self.distance = np.float64(1.0)
+    def __init__(self, resolution: list[int], distance: float):
+        self.__resolution = resolution
+        self.__distance = distance
 
-    def normal_and_height(self, uv: np.array):
-        n = np.array([0.0, 0.0, 1.0])
-        h = 0.0
-        return n, h
+    def render_canvas(self) -> np.ndarray:
+        """
+        Render a canvas image reflected by the mirror.
+        """
+        canvas = cp.zeros(self.__resolution, dtype=cp.float64)
+        return cp.asnumpy(canvas)
 
-    def brdf(self, light_dir, view_dir, normal):
-        # Test
-        return np.dot(light_dir, normal) * 0.5
+    def render_heightmap(self) -> np.ndarray:
+        heightmap = cp.zeros(self.__resolution, dtype=cp.float64)
+        return cp.asnumpy(heightmap)
