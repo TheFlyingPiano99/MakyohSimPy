@@ -59,12 +59,14 @@ void canvas(
     double t = 0.0;
     bool is_intersect = intersectPlane(canvas_normal, canvas_point, mirror_pos, reflect(mirror_normal, canvas_normal), t);
     double3 canvas_pos = double3{0.0, 0.0, 0.0};
+    canvas_pos = mirror_pos + t * mirror_normal;
+    /*
     if (is_intersect) {
-        canvas_pos = mirror_pos + t * mirror_normal;
     }
     else {
         reflection = 0.0;    // No reflection when no intersection between the canvas and the ray
     }
+    */
 
     uint2 canvas_pixel = uint2{(unsigned int)(canvas_pos.x / delta_x), (unsigned int)(canvas_pos.y / delta_y)};
     // Check whether the coordinates are on the rendered canvas

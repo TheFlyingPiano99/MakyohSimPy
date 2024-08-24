@@ -6,9 +6,9 @@ def main():
     print("Hello Makyoh sim!")
 
     # Init:
-    resolution = [2048, 2048]
+    resolution = [4096, 4096]
     mirror_size = [1.0, 1.0]
-    distance = 2.0
+    distance = 5.0
     mirror = Mirror(resolution, mirror_size, distance)
 
     # Render:
