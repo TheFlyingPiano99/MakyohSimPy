@@ -1,6 +1,11 @@
 # MakyohSimPy
 Python implementation of a magic mirror simulator.
 
+## Requirements
+- CUDA-Enabled NVIDIA GPU
+- CUDA Toolkit v12.x
+- Python 3.11 or newer
+
 ## Installation
 Run the following to create a virtual environment:
 ```

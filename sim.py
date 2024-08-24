@@ -4,14 +4,25 @@ from src.mirror import Mirror
 
 def main():
     print("Hello Makyoh sim!")
-    resolution = [1000, 1000]
-    my_mirror = Mirror()
-    canvas_image = my_mirror.render_canvas(resolution)
 
-    # show hight map in 2d
+    # Init:
+    resolution = [2048, 2048]
+    mirror_size = [1.0, 1.0]
+    distance = 2.0
+    mirror = Mirror(resolution, mirror_size, distance)
+
+    # Render:
+    heightmap = mirror.render_heightmap().T
     plt.figure()
-    plt.title("Reflected image on the canvas")
-    p = plt.imshow(canvas_image)
+    plt.title("Mirror heightmap")
+    p = plt.imshow(heightmap)
+    plt.colorbar(p)
+    plt.show()
+
+    canvas = mirror.render_canvas().T
+    plt.figure()
+    plt.title("Canvas image")
+    p = plt.imshow(canvas)
     plt.colorbar(p)
     plt.show()
 
