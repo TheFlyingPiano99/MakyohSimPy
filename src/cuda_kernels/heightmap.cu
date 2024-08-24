@@ -12,8 +12,8 @@ void heightmap(
     double2 pos = double2{(double)pixel.x * delta_x, (double)pixel.y * delta_y};
     // Function:
 
-    double height = sin(2.0 * M_PI_d * pos.x) * sin(4.0 * M_PI_d * pos.y);
-    //double height = pos.x;
+    double height = 0.00000001 * sin(2.0 * M_PI_d * pos.x) * sin(4.0 * M_PI_d * pos.y);
+    //double height = 0.0;
 
     // End of function
     unsigned int idx = get_array_index_2d();

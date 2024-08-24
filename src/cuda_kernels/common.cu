@@ -870,4 +870,26 @@ __device__ uint3 inv_position_operator(const T3& r, const T3& delta_r, const T3&
     };
 }
 
+/*
+    Reflect vec using the normal
+*/
+template<vec3 T3>
+__device__ T3 reflect(const T3& normal, const T3& vec)
+{
+    return vec + 2.0 * dot(normal, vec) * normal;
+}
+
+template<typename T, vec3 T3>
+bool intersectPlane(const T3& n, const T3& p0, const T3& l0, const T3& l, T &t)
+{
+    // Assuming vectors are all normalized
+    T denom = dot(n, l);
+    if (denom > 1e-6) {
+        T3 p0l0 = p0 - l0;
+        t = dot(p0l0, n) / denom;
+        return (t >= 0);
+    }
+    return false;
+}
+
 #endif  // CUDA_COMMON

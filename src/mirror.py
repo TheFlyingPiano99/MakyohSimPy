@@ -21,7 +21,7 @@ class Mirror:
         self.__size = size
         self.__delta_xy = [self.__size[0] / self.__resolution[0], self.__size[1] / self.__resolution[1]]
         self.__distance = distance
-        self.__kernel_grid_size, self.__kernel_block_size = mu.get_grid_size_block_size(self.__resolution)
+        self.__kernel_grid_size, self.__kernel_block_size = mu.get_grid_size_block_size(self.__resolution, False)
         self._init_kernels()
 
     def _init_kernels(self):
@@ -38,7 +38,7 @@ class Mirror:
         self.__canvas_kernel = cp.RawModule(
             code=canvas_kernel_source,
             name_expressions=[canvas_func_name],
-            options=("-std=c++20", f"-I{os.path.abspath('src')}")
+            options=("-std=c++20", f"-I{os.path.abspath('src')}"),
         ).get_function(canvas_func_name)
 
 
