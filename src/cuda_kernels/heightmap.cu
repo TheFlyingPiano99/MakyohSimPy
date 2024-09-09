@@ -21,7 +21,7 @@ void heightmap(
     double r = 10.0;
     if (pos.x > x0 && pos.x < x1)
     {
-        height = -(sqrt(r*r - pow(pos.x - (x0 + x1) / 2.0, 2)) - sqrt(r*r - pow((x1 - x0) / 2.0, 2)));
+        height = sqrt(r*r - pow((x1 - x0) / 2.0, 2)) - sqrt(r*r - pow(pos.x - (x0 + x1) / 2.0, 2));
     }
 
     // End of function

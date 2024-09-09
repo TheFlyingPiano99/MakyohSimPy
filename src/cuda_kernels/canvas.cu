@@ -12,12 +12,12 @@ void canvas(
     uint2 mirror_pixel = get_voxel_coords_2d();
     // The position takes the (0, 0) value in the upper left corner of the mirror viewed from the canvas.
     // We use a right-handed coordinate system
-    double3 mirror_pos = double3{(double)mirror_pixel.x * delta_x, (double)mirror_pixel.y * delta_y, distance};
+    double3 mirror_pos = double3{(double)mirror_pixel.x * delta_x, (double)mirror_pixel.y * delta_y, -distance};
     unsigned int idx = get_array_index_2d();
-    double3 canvas_normal = double3{0.0, 0.0, 1.0};
+    double3 canvas_normal = double3{0.0, 0.0, -1.0};
     double3 canvas_point = double3{0.0, 0.0, 0.0};
     double height = heightmap[idx];
-    mirror_pos.z -= height; // Correct for height differences
+    mirror_pos.z += height; // Correct for height differences
 
     // Mirror normal vector (central difference approximation):
     uint2 dimensions = uint2{ gridDim.x * blockDim.x, gridDim.y * blockDim.y };
@@ -51,25 +51,18 @@ void canvas(
     double3 tangent = double3{delta_x, 0.0, grad.x};
     double3 bitangent = double3{0.0, delta_y, grad.y};
     // The normal of the mirror should point towards the canvas:
-    double3 mirror_normal = normalize(cross(bitangent, tangent));
+    double3 mirror_normal = normalize(cross(normalize(tangent), normalize(bitangent)));
 
     // Calculate reflected light and canvas position:
     // Use mirror_pos and normal
     double reflection = 1.0; // Test
     double t = 0.0;
-    bool is_intersect = intersectPlane(canvas_normal, canvas_point, mirror_pos, reflect(mirror_normal, canvas_normal), t);
-    double3 canvas_pos = double3{0.0, 0.0, 0.0};
-    canvas_pos = mirror_pos + t * mirror_normal;
-    /*
-    if (is_intersect) {
-    }
-    else {
-        reflection = 0.0;    // No reflection when no intersection between the canvas and the ray
-    }
-    */
+    double3 ray_dir = normalize(reflect(mirror_normal, canvas_normal));
+    bool is_intersect = intersectPlane(canvas_normal, canvas_point, mirror_pos, ray_dir, t);
+    double3 canvas_pos = mirror_pos + t * ray_dir;
 
     uint2 canvas_pixel = uint2{(unsigned int)(canvas_pos.x / delta_x), (unsigned int)(canvas_pos.y / delta_y)};
-    // Check whether the coordinates are on the rendered canvas
+    // Check whether the coordinates are on the rendered canvas:
     if (
         canvas_pos.x < 0.0
         || canvas_pos.y < 0.0
@@ -77,9 +70,14 @@ void canvas(
         || canvas_pos.y >= delta_y * gridDim.y * blockDim.y
     )
     {
-        reflection = 0.0;
-        canvas_pixel = uint2{0, 0};
+        return;
     }
     unsigned int canvas_idx = get_array_index_2d(canvas_pixel);
+    //canvas[canvas_idx] = t;
+
+    if (!is_intersect) {
+        return;
+    }
+
     atomicAdd(&canvas[canvas_idx], reflection);
 }
